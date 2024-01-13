@@ -1,9 +1,12 @@
 <template>
     <main class="dashboard-page">
-        <h1>TRACKER</h1>
+        <CalorieSummary />
+        <FoodSelector />
     </main>
 </template>
 
 <script setup>
+import CalorieSummary from '@/components/tracker/CalorieSummary.vue';
+import FoodSelector from '@/components/tracker/FoodSelector.vue';
 
 </script>
