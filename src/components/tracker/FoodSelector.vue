@@ -140,14 +140,16 @@ const consoleLog = () => {
 };
 
 const saveTrackedDay = async () => {
-  const formattedDate = toLocalISOString(selectedDate.value);
-  const trackedDay = {
-    date: formattedDate,
-    breakfast: trackerStore.meals.breakfast,
-    lunch: trackerStore.meals.lunch,
-    dinner: trackerStore.meals.dinner,
-    snacks: trackerStore.meals.snacks,
-  };
+    console.log("Current meals in store:", trackerStore.meals);
+
+    const formattedDate = toLocalISOString(selectedDate.value);
+    const trackedDay = {
+        date: formattedDate,
+        breakfast: trackerStore.meals.breakfast,
+        lunch: trackerStore.meals.lunch,
+        dinner: trackerStore.meals.dinner,
+        snacks: trackerStore.meals.snacks,
+    };
 
   try {
     const response = await post("feature", "tracker", trackedDay, {

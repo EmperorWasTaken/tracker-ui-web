@@ -13,7 +13,7 @@
 
 <script setup>
 import Sidebar from "./components/general/Sidebar.vue";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { supabase } from "./supabase/init.js";
 import { useUserStore } from "./stores/user.js";
 import { useTrackerStore } from './stores/tracker.js';
@@ -29,6 +29,7 @@ onMounted(() => {
   if (user.value) {
     userStore.setUserId(user.value.id);
 	fetchAllTrackedDay();
+	subscribeToTrackedDayChanges();
   }
 
   supabase.auth.onAuthStateChange((event, session) => {
@@ -59,6 +60,20 @@ const fetchAllTrackedDay = async () => {
     console.error('Error fetching all tracked day:', error);
   }
 };
+
+const subscribeToTrackedDayChanges = () => {
+  supabase
+    .from('tracked_day')
+    .on('*', payload => {
+      console.log('Change received!', payload);
+      fetchAllTrackedDay();
+    })
+    .subscribe();
+};
+
+onUnmounted(() => {
+  supabase.removeSubscription(supabase.getSubscriptions()[0]);
+});
 
 </script>
 
