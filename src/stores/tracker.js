@@ -18,8 +18,8 @@ export const useTrackerStore = defineStore('tracker', {
     },
   },
   actions: {
-    addFoodItem(meal, foodItem, calories) {
-      this.meals[meal].push({ foodItem, calories });
+    addFoodItem(meal, name, calories) {
+      this.meals[meal].push({ name, calories });
       this.totalCalories += calories;
     },
   },
