@@ -4,7 +4,11 @@ import App from './App.vue';
 import router from './router';
 import "./assets/main.css";
 
-import 'primevue/resources/themes/lara-light-green/theme.css'
+import 'primevue/resources/themes/lara-dark-teal/theme.css';
+import 'primevue/resources/themes/lara-light-teal/theme.css';
+import 'primevue/resources/primevue.min.css';    
+import 'primeicons/primeicons.css';
+
 import PrimeVue from 'primevue/config';
 import AutoComplete from 'primevue/autocomplete';
 import Accordion from 'primevue/accordion';
@@ -104,6 +108,9 @@ import TriStateCheckbox from 'primevue/tristatecheckbox';
 import VirtualScroller from 'primevue/virtualscroller';
 
 import BlockViewer from '@/components/BlockViewer.vue';
+
+
+import './assets/styles.scss';
 
 const app = createApp(App);
 app.config.errorHandler = (err, vm, info) => {

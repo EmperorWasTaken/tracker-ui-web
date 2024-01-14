@@ -7,44 +7,37 @@
       </div>
 
       <!-- Login -->
-      <form
-        @submit.prevent="login"
-        class="p-8 flex flex-col bg-light-grey rounded-md shadow-lg"
-      >
-        <h1 class="text-3xl text-at-light-green mb-4">Login</h1>
+      <div class="surface-card p-4 shadow-2 border-round w-full lg:w-6">
+        <div class="text-center mb-5">
+          <!-- Logo and Welcome Text -->
+          <!-- ... -->
 
-        <div class="flex flex-column gap-2">
-          <label for="email">Email</label>
-          <InputText
-            type="text"
-            id="email"
-            v-model="email"
-            aria-describedby="email-help"
-          />
+          <div class="text-900 text-3xl font-medium mb-3">Welcome Back</div>
+          <span class="text-600 font-medium line-height-3">Don't have an account?</span>
+          <a @click="register" class="font-medium no-
+underline ml-2 text-blue-500 cursor-pointer">Create today!</a>
+</div>
+
+    <form @submit.prevent="login">
+      <div>
+        <label for="email" class="block text-900 font-medium mb-2">Email</label>
+        <InputText id="email" type="text" v-model="email" class="w-full mb-3" />
+
+        <label for="password" class="block text-900 font-medium mb-2">Password</label>
+        <InputText id="password" type="password" v-model="password" class="w-full mb-3" />
+
+        <div class="flex align-items-center justify-content-between mb-6">
+          <!-- Additional Options like 'Remember me' -->
+          <!-- ... -->
         </div>
 
-        <div class="flex flex-column gap-2">
-          <label for="password">Password</label>
-          <InputText
-            type="password"
-            v-model="password"
-            aria-describedby="password-help"
-          ></InputText>
-        </div>
-
-        <Button
-          type="submit"
-          label="Login"
-          icon="pi pi-check"
-          iconPos="right"
-          :loading="loading"
-          outlined
-        ></Button>
-
-        <Button @click="register" outlined>Register</Button>
-      </form>
-    </div>
+        <Button @click="login" label="Sign In" icon="pi pi-user" class="w-full"></Button>
+      </div>
+    </form>
+  </div>
+</div>
   </main>
+
 </template>
 <script setup>
 import { ref } from "vue";
