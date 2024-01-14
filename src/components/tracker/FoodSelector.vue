@@ -68,7 +68,7 @@
             {{ item.name }}: {{ item.calories }} calories
           </li>
         </ul>
-        <p>Total Calories: {{ getTotalCalories(meal) }}</p>
+        <p>Total Calories: {{ caloriesLeft }}</p>
       </div>
     </div>
   </template>
@@ -188,9 +188,19 @@ const getSelectedDataItems = computed(() => {
   }
 });
 
-const getTotalCalories = (meal) => {
-  return meal.reduce((total, item) => total + item.calories, 0);
-};
+const totalCalories = computed(() => {
+  let total = 0;
+  if (selectedData.value) {
+    ['breakfast', 'lunch', 'dinner', 'snacks'].forEach(mealType => {
+      total += selectedData.value[mealType].reduce((sum, item) => sum + item.calories, 0);
+    });
+  }
+  return total;
+});
+
+const caloriesLeft = computed(() => {
+  return trackerStore.caloriesLeft(totalCalories.value);
+});
 
 const getGroupedMeals = (items) => {
   const groupedMeals = {};

@@ -12,10 +12,10 @@ export const useTrackerStore = defineStore('tracker', {
     totalCalories: 0,
   }),
   getters: {
-    caloriesLeft: (state) => {
-      const dailyCalorieGoal = 2000;
-      return dailyCalorieGoal - state.totalCalories;
-    },
+    caloriesLeft: (state) => (totalCalories) => {
+        const dailyCalorieGoal = 2000;
+        return dailyCalorieGoal - totalCalories;
+      },
     getTrackedDays: (state) => state.trackedDays,
   },
   actions: {
