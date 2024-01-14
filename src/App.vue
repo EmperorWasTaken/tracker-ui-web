@@ -16,15 +16,19 @@ import Sidebar from "./components/general/Sidebar.vue";
 import { ref, onMounted } from "vue";
 import { supabase } from "./supabase/init.js";
 import { useUserStore } from "./stores/user.js";
+import { useTrackerStore } from './stores/tracker.js';
+import { get, post } from './helpers/api.js';
 import Login from "./views/user/Login.vue";
 
 const userStore = useUserStore();
+const trackerStore = useTrackerStore();
 const user = ref(null);
 
 onMounted(() => {
   user.value = supabase.auth.user();
   if (user.value) {
     userStore.setUserId(user.value.id);
+	fetchAllTrackedDay();
   }
 
   supabase.auth.onAuthStateChange((event, session) => {
@@ -38,6 +42,16 @@ onMounted(() => {
 
   console.log("user", user.value);
 });
+
+const fetchAllTrackedDay = async () => {
+  try {
+    const response = await get('feature', 'tracker/getAll', null, { userId: userStore.userId });
+    console.log('All Tracked Day fetched:', response.data);
+    trackerStore.setMeals(response.data); // Update the store with fetched data
+  } catch (error) {
+    console.error('Error fetching all tracked day:', error);
+  }
+};
 </script>
 
 <style lang="scss">
