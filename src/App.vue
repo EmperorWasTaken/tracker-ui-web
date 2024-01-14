@@ -47,11 +47,19 @@ const fetchAllTrackedDay = async () => {
   try {
     const response = await get('feature', 'tracker/getAll', null, { userId: userStore.userId });
     console.log('All Tracked Day fetched:', response.data);
-    trackerStore.setMeals(response.data); // Update the store with fetched data
+    // Check if the response data is an array
+    if (Array.isArray(response.data)) {
+      trackerStore.setTrackedDays(response.data);
+    } else {
+      // If the data is not an array, set an empty array
+      trackerStore.setTrackedDays([]);
+      console.log('No tracked day found or data format is incorrect');
+    }
   } catch (error) {
     console.error('Error fetching all tracked day:', error);
   }
 };
+
 </script>
 
 <style lang="scss">
