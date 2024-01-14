@@ -56,6 +56,26 @@
     <br />
     <Button @click="consoleLog" outlined>Log</Button>
   </div>
+
+  <div class="card">
+    <DataView :value="getSelectedDataItems">
+  <template #list="slotProps">
+    <div class="grid grid-nogutter">
+      <div v-for="(meal, mealType) in getGroupedMeals(slotProps.items)" :key="mealType" class="col-12">
+        <h3>{{ mealType }}</h3>
+        <ul>
+          <li v-for="(item, index) in meal" :key="index">
+            {{ item.name }}: {{ item.calories }} calories
+          </li>
+        </ul>
+        <p>Total Calories: {{ getTotalCalories(meal) }}</p>
+      </div>
+    </div>
+  </template>
+</DataView>
+
+</div>
+
 </template>
 
 <script setup>
@@ -82,10 +102,28 @@ const selectMeal = (meal) => {
 
 const selectedData = computed(() => {
   const formattedDate = toLocalISOString(selectedDate.value);
-  return trackerStore.trackedDays?.find(
+  const trackedDay = trackerStore.trackedDays?.find(
     (trackedDay) => trackedDay.date === formattedDate
   );
+
+  if (trackedDay) {
+
+    const mealsWithMealType = {
+      breakfast: trackedDay.breakfast.map(item => ({ ...item, mealType: 'breakfast' })),
+      lunch: trackedDay.lunch.map(item => ({ ...item, mealType: 'lunch' })),
+      dinner: trackedDay.dinner.map(item => ({ ...item, mealType: 'dinner' })),
+      snacks: trackedDay.snacks.map(item => ({ ...item, mealType: 'snacks' })),
+    };
+
+    return {
+      ...trackedDay,
+      ...mealsWithMealType,
+    };
+  }
+
+  return null;
 });
+
 
 watch(selectedDate, (newValue, oldValue) => {
   console.log("Selected date changed to:", toLocalISOString(newValue));
@@ -125,6 +163,44 @@ function toLocalISOString(date) {
   const adjustedDate = new Date(date.getTime() - (offset * 60 * 1000));
   return adjustedDate.toISOString().split('T')[0];
 }
+
+
+const getSelectedDataItems = computed(() => {
+  if (selectedData.value) {
+    const items = [];
+    if (selectedData.value.breakfast) {
+      items.push(...selectedData.value.breakfast);
+    }
+    if (selectedData.value.lunch) {
+      items.push(...selectedData.value.lunch);
+    }
+    if (selectedData.value.dinner) {
+      items.push(...selectedData.value.dinner);
+    }
+    if (selectedData.value.snacks) {
+      items.push(...selectedData.value.snacks);
+    }
+    return items;
+  } else {
+    return [];
+  }
+});
+
+const getTotalCalories = (meal) => {
+  return meal.reduce((total, item) => total + item.calories, 0);
+};
+
+const getGroupedMeals = (items) => {
+  const groupedMeals = {};
+  for (const item of items) {
+    const mealType = item.mealType; // Replace with the actual property name in your data
+    if (!groupedMeals[mealType]) {
+      groupedMeals[mealType] = [];
+    }
+    groupedMeals[mealType].push(item);
+  }
+  return groupedMeals;
+};
 </script>
 
 <style scoped>
