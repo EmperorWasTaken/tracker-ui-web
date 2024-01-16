@@ -8,10 +8,13 @@
 </template>
 
 <script setup>
+import SelectButton from 'primevue/selectbutton';
+import 'primevue/resources/primevue.min.css';
+import 'primeicons/primeicons.css';
 import { ref, watch } from 'vue';
 import { usePrimeVue } from 'primevue/config';
 
-const theme = ref('lara-light-teal'); // default theme
+const theme = ref('lara-light-teal');
 
 const options = [
     { label: 'Light Teal', value: 'lara-light-teal' },
@@ -20,14 +23,16 @@ const options = [
 
 const PrimeVue = usePrimeVue();
 
-const switchTheme = () => {
-    const newTheme = theme.value === 'lara-light-teal' ? 'lara-dark-teal' : 'lara-light-teal';
-    PrimeVue.changeTheme(newTheme, 'theme-link');
-    theme.value = newTheme;
+const switchTheme = (themeName) => {
+  const themeLink = document.getElementById('theme-link');
+  if (themeLink) {
+    themeLink.href = `/themes/${themeName}/theme.css`;
+  }
 };
 
 watch(theme, (newTheme) => {
-    PrimeVue.changeTheme(newTheme, 'theme-link');
+    console.log('newTheme', newTheme.value);
+    switchTheme(newTheme.value);
 });
 
 
