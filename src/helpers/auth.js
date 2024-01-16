@@ -21,24 +21,17 @@ export const register = async (email, password, confirmPassword) => {
     }
 };
 
-export const login = async (email, password, rememberMe = false) => {
-    try {
+export const login = async (email, password) => {
+  try {
       const { error } = await supabase.auth.signIn({
-        email,
-        password,
+          email,
+          password,
       });
       if (error) throw error;
-
-      if (rememberMe) {
-        localStorage.setItem("userEmail", email);
-      } else {
-        localStorage.removeItem("userEmail");
-      }
-
       router.push({ name: "dashboard" });
-    } catch (error) {
+  } catch (error) {
       throw new Error(error.message);
-    }
+  }
 };
 
 export const logout = async () => {

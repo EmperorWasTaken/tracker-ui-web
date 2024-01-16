@@ -54,8 +54,9 @@
     </main>
 </template>
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { login, register } from "../../helpers/auth.js";
+import { supabase } from '../../supabase/init.js';
 import { useRouter } from 'vue-router';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
@@ -71,16 +72,18 @@ const loading = ref(false);
 const isRegistering = ref(false);
 const rememberMeChecked = ref(false);
 
-const userEmail = localStorage.getItem('userEmail');
-if (userEmail) {
-    email.value = userEmail;
-    rememberMeChecked.value = true;
-};
+onMounted(() => {
+    const session = supabase.auth.session();
+    if (session?.user) {
+        email.value = session.user.email;
+        router.push({ name: 'dashboard' });
+    }
+});
 
 const handleLogin = async () => {
     try {
         loading.value = true;
-        await login(email.value, password.value, rememberMeChecked.value);
+        await login(email.value, password.value);
         router.push({ name: 'dashboard' });
     } catch (error) {
         errorMsg.value = `Error: ${error.message}`;
