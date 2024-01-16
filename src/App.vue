@@ -99,7 +99,7 @@ onUnmounted(() => {
 }
 
 body {
-    background: var(--light);
+  background: var(--light);
 }
 
 button {
