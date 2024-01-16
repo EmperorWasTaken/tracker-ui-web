@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8095',
+  baseURL: 'http://api.web-kai-dev.com',
 });
 
 export const get = (featureName, resourceName, data, params = {}) => {
