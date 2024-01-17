@@ -19,12 +19,35 @@ import { useUserStore } from './stores/user.js';
 import { useTrackerStore } from './stores/tracker.js';
 import { get, post } from './helpers/api.js';
 import Login from './views/user/Login.vue';
+import { useLayout } from './layout/composables/layout';
 
 const userStore = useUserStore();
 const trackerStore = useTrackerStore();
 const user = ref(null);
 
+
+
+const { changeThemeSettings } = useLayout();
+
+const onChangeTheme = (theme) => {
+    const elementId = 'theme-link';
+    const linkElement = document.getElementById(elementId);
+    const newThemeUrl = linkElement.getAttribute('href').replace(/themes\/.*?\/theme.css/, `themes/${theme}/theme.css`);
+    linkElement.setAttribute('href', newThemeUrl);
+    changeThemeSettings(theme);
+};
+
+const switchTheme = (theme) => {
+  const themeLink = document.getElementById('theme-link');
+  if (themeLink) {
+    const newThemeUrl = `/themes/${theme}/theme.css`;
+    themeLink.setAttribute('href', newThemeUrl);
+  }
+};
+const storedTheme = localStorage.getItem('theme')  ||"";
+
 onMounted(async () => {
+    switchTheme(storedTheme);
     const session = supabase.auth.session();
     user.value = session?.user || null;
 
