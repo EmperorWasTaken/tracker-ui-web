@@ -47,6 +47,7 @@
                         <button @click="isRegistering = !isRegistering" class="mt-4 text-primary-color cursor-pointer">
                             {{ isRegistering ? 'Already have an account? Sign In' : 'Need an account? Register' }}
                         </button>
+                        <button @click="showToast()">Test</button>
                     </div>
                 </div>
             </div>
@@ -56,12 +57,14 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { login, register } from "../../helpers/auth.js";
+import { useToast } from "primevue/usetoast";
 import { supabase } from '../../supabase/init.js';
 import { useRouter } from 'vue-router';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import { useLayout } from '../../layout/composables/layout.js';
 
+const toast = useToast();
 const { layoutConfig } = useLayout();
 const router = useRouter();
 const email = ref('');
@@ -71,6 +74,11 @@ const errorMsg = ref('');
 const loading = ref(false);
 const isRegistering = ref(false);
 const rememberMeChecked = ref(false);
+
+const showToast = (message, severity, summary) => {
+    toast.add({severity: severity, summary: summary, detail: message, life: 3000});
+};
+
 
 onMounted(() => {
     const session = supabase.auth.session();
@@ -84,8 +92,10 @@ const handleLogin = async () => {
     try {
         loading.value = true;
         await login(email.value, password.value);
+        showToast('Check your email to complete registration.', 'success', 'Success');
         router.push({ name: 'dashboard' });
     } catch (error) {
+        showToast(error.message, 'error', 'Error');
         errorMsg.value = `Error: ${error.message}`;
         setTimeout(() => {
             errorMsg.value = null;
@@ -96,11 +106,21 @@ const handleLogin = async () => {
 };
 
 const handleRegister = async () => {
+    console.log('handleRegister in Login.vue');
     if (password.value === confirmPassword.value) {
+        console.log('password value', password.value);
+        console.log('confirmPassword value', confirmPassword.value);
         try {
-            await register(email.value, password.value);
-            router.push({ name: 'login' });
+            await register(email.value, password.value, confirmPassword.value);
+            showToast('Check your email to complete registration.', 'success', 'Success');
+            errorMsg.value = 'Check your email to complete registration.';
+            isRegistering.value = false;
+            setTimeout(() => {
+                errorMsg.value = null;
+                isRegistering.value = false; 
+            }, 5000);
         } catch (error) {
+            showToast(error.message, 'error', 'Error');
             errorMsg.value = error.message;
             setTimeout(() => {
                 errorMsg.value = null;
@@ -113,7 +133,6 @@ const handleRegister = async () => {
         }, 5000);
     }
 };
-
 const logoUrl = computed(() => {
     return `../../../public/layout/images/${layoutConfig.darkTheme.value ? 'logo-white' : 'logo-dark'}.svg`;
 });
