@@ -47,7 +47,6 @@
                         <button @click="isRegistering = !isRegistering" class="mt-4 text-primary-color cursor-pointer">
                             {{ isRegistering ? 'Already have an account? Sign In' : 'Need an account? Register' }}
                         </button>
-                        <button @click="showToast()">Test</button>
                     </div>
                 </div>
             </div>
@@ -76,7 +75,7 @@ const isRegistering = ref(false);
 const rememberMeChecked = ref(false);
 
 const showToast = (message, severity, summary) => {
-    toast.add({severity: severity, summary: summary, detail: message, life: 3000});
+    toast.add({ severity, summary, detail: message, life: 3000 });
 };
 
 
@@ -92,11 +91,11 @@ const handleLogin = async () => {
     try {
         loading.value = true;
         await login(email.value, password.value);
-        showToast('Check your email to complete registration.', 'success', 'Success');
-        router.push({ name: 'dashboard' });
+        showToast('Successfully logged in!', 'success', 'Success');
+        router.push({ name: "dashboard" });
     } catch (error) {
-        showToast(error.message, 'error', 'Error');
-        errorMsg.value = `Error: ${error.message}`;
+        showToast('Error logging in!', 'error', 'Error');
+        console.log(`Error: ${error.message}`);
         setTimeout(() => {
             errorMsg.value = null;
         }, 5000);

@@ -9,6 +9,7 @@
     <div v-else>
         <Login />
     </div>
+    <Toast />
 </template>
 
 <script setup>
@@ -20,7 +21,9 @@ import { useTrackerStore } from './stores/tracker.js';
 import { get, post } from './helpers/api.js';
 import Login from './views/user/Login.vue';
 import { useLayout } from './layout/composables/layout';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const userStore = useUserStore();
 const trackerStore = useTrackerStore();
 const user = ref(null);
