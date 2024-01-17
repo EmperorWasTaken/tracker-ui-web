@@ -5,8 +5,6 @@ import router from './router';
 import "./assets/main.css";
 import "./assets/base.css";
 
-import 'primevue/resources/themes/lara-dark-teal/theme.css';
-import 'primevue/resources/themes/lara-light-teal/theme.css';
 import 'primevue/resources/primevue.min.css';    
 import 'primeicons/primeicons.css';
 

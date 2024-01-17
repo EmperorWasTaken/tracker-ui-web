@@ -2,73 +2,43 @@
     <main class="dashboard-page">
         <h1>SETTINGS</h1>
         <div class="card flex justify-content-center">
-            <SelectButton @click="toggleDark()" v-model="theme" :options="options" />
+            <Button @click="toggleDark()" outlined>{{ buttonText }}</Button>
             
     </div>
-    <Button @click="selectLightTheme()" outlined>LIGHT</Button>
-    <Button @click="selectDarkTheme()" outlined>DARK</Button>
     </main>
 </template>
 
 <script setup>
-import SelectButton from 'primevue/selectbutton';
 import Button from 'primevue/button';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
-import { ref, watch } from 'vue';
-import { usePrimeVue } from 'primevue/config';
-import { useDark, useToggle } from '@vueuse/core';
-
-const theme = ref('lara-light-teal');
+import { ref, computed } from 'vue';
+import { useDark } from '@vueuse/core';
 
 const isDark = useDark();
-const toggleDark = useToggle(isDark);
 
+const lightTheme = 'lara-light-teal';
+const darkTheme = 'lara-dark-teal';
 
+const storedTheme = localStorage.getItem('theme') || lightTheme;
+isDark.value = storedTheme === darkTheme;
 
+const buttonText = computed(() => (isDark.value ? 'LIGHT' : 'DARK'));
 
+const toggleDark = () => {
+  const newTheme = isDark.value ? lightTheme : darkTheme;
+  switchTheme(newTheme);
+  isDark.value = !isDark.value;
+  localStorage.setItem('theme', newTheme);
+};
 
+const switchTheme = (theme) => {
+  const themeLink = document.getElementById('theme-link');
+  if (themeLink) {
+    const newThemeUrl = `/themes/${theme}/theme.css`;
+    themeLink.setAttribute('href', newThemeUrl);
+  }
+};
 
-
-
-
-
-
-
-
-
-
-
-const options = [
-    { label: 'Light Teal', value: 'lara-light-teal' },
-    { label: 'Dark Teal', value: 'lara-dark-teal' },
-];
-
-const PrimeVue = usePrimeVue();
-
-const selectLightTheme = () => {
-    // 1. Current theme name
-    // 2. Next theme name
-    // 3. id of <link>, what reference to where set theme css file
-    console.log('selectLightTheme');
-    PrimeVue.changeTheme('lara-dark-purple', 'lara-light-teal', 'theme-link', () => {});    
-}
-
-// if current theme is light
-const selectDarkTheme = () => {
-    // 1. Current theme name
-    // 2. Next theme name
-    // 3. id of <link>, what reference to where set theme css file
-    console.log('selectDarkTheme');
-    PrimeVue.changeTheme('lara-light-purple', 'lara-dark-teal', 'theme-link', () => {});
-}
-
-
-
-watch(theme, (newTheme) => {
-    console.log('newTheme', newTheme.value);
-    switchTheme(newTheme.value);
-});
-
-
+switchTheme(storedTheme);
 </script>
