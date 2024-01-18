@@ -2,7 +2,7 @@
     <main class="dashboard-page">
         <div class="surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden">
             <div class="flex flex-column align-items-center justify-content-center">
-                <img :src="logoUrl" alt="Logo" class="mb-5 w-6rem flex-shrink-0" />
+                <!-- <img :src="logoUrl" alt="Logo" class="mb-5 w-6rem flex-shrink-0" /> -->
                 <div style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
                     <div class="w-full surface-card py-8 px-5 sm:px-8" style="border-radius: 53px">
                         <div class="text-center mb-5">
@@ -24,7 +24,7 @@
                                     <Checkbox v-model="rememberMeChecked" id="rememberme" binary class="mr-2"></Checkbox>
                                     <label for="rememberme">Remember me</label>
                                 </div>
-                                <a class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--primary-color)">Forgot password?</a>
+                                <a @click="handleForgottenPassword" class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--primary-color)">Forgot password?</a>
                             </div>
 
                             <Button type="submit" label="Sign In" class="w-full p-3 text-xl" outlined></Button>
@@ -44,9 +44,9 @@
                         </form>
 
                         <!-- Toggle Button -->
-                        <button @click="isRegistering = !isRegistering" class="mt-4 text-primary-color cursor-pointer">
+                        <Button @click="isRegistering = !isRegistering" class="mt-4 text-primary-color cursor-pointer">
                             {{ isRegistering ? 'Already have an account? Sign In' : 'Need an account? Register' }}
-                        </button>
+                        </Button>
                     </div>
                 </div>
             </div>
@@ -132,6 +132,24 @@ const handleRegister = async () => {
         }, 5000);
     }
 };
+
+const handleForgottenPassword = async () => {
+    try {
+        await supabase.auth.api.resetPasswordForEmail(email.value);
+        showToast('Check your email for the password reset link.', 'success', 'Success');
+        errorMsg.value = 'Check your email for the password reset link.';
+        setTimeout(() => {
+            errorMsg.value = null;
+        }, 5000);
+    } catch (error) {
+        showToast(error.message, 'error', 'Error');
+        errorMsg.value = error.message;
+        setTimeout(() => {
+            errorMsg.value = null;
+        }, 5000);
+    }
+};
+
 const logoUrl = computed(() => {
     return `/layout/images/${layoutConfig.darkTheme.value ? 'logo-white' : 'logo-dark'}.svg`;
 });
