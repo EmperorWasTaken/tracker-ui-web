@@ -2,6 +2,7 @@
     <div class="app" v-if="user">
         <!-- Sidebar -->
         <Sidebar />
+        <Topbar />
 
         <!-- Content -->
         <router-view />
@@ -22,6 +23,7 @@ import { get, post } from './helpers/api.js';
 import Login from './views/user/Login.vue';
 import { useLayout } from './layout/composables/layout';
 import { useRouter } from 'vue-router';
+import Topbar from './components/general/Topbar.vue';
 
 const router = useRouter();
 const userStore = useUserStore();
