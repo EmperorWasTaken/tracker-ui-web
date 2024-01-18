@@ -1,8 +1,5 @@
 <template>
     <div class="app" v-if="user">
-        <!-- Sidebar -->
-        <Sidebar />
-
         <!-- Content -->
         <router-view />
     </div>
@@ -13,7 +10,6 @@
 </template>
 
 <script setup>
-import Sidebar from './components/general/Sidebar.vue';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { supabase } from './supabase/init.js';
 import { useUserStore } from './stores/user.js';

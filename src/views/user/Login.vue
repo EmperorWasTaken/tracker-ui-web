@@ -133,6 +133,6 @@ const handleRegister = async () => {
     }
 };
 const logoUrl = computed(() => {
-    return `../../../public/layout/images/${layoutConfig.darkTheme.value ? 'logo-white' : 'logo-dark'}.svg`;
+    return `/layout/images/${layoutConfig.darkTheme.value ? 'logo-white' : 'logo-dark'}.svg`;
 });
 </script>
