@@ -1,18 +1,18 @@
 <template>
-  <main class="dashboard-page">
-    <h1>Dashboard</h1>
-    <p>This is the dashboard page</p>
-    <div class="card flex justify-content-center">
-        <Dropdown v-model="eq" :options="eqs" optionLabel="name" placeholder="Equations" class="w-full md:w-14rem" />
+  <main class="surface-0 flex justify-content-center">
+    <div id="home" class="landing-wrapper overflow-hidden">
+    <div class="card">
+        <Dropdown v-model="eq" :options="eqs" optionLabel="name" placeholder="Equations" />
         <InputText type="text" v-model="age" placeholder="Age"></InputText>
         <InputText type="text" v-model="height" placeholder="Height"></InputText>
         <InputText type="text" v-model="weight" placeholder="Weight"></InputText>
         <InputText v-if="eq && eq.code === 'K'" type="text" v-model="bf" placeholder="Bodyfat %"></InputText>
-        <Dropdown v-model="selectedGender" :options="genders" optionLabel="name" placeholder="Gender" class="w-full md:w-14rem" />
+        <Dropdown v-model="selectedGender" :options="genders" optionLabel="name" placeholder="Gender" />
     </div>
     <button @click="postBMR">Calculate BMR</button>
     <p v-if="bmr !== null">BMR: {{ bmr }}</p>
     <button v-if="bmr !== null" @click="resetBMR">Reset BMR</button>
+  </div>
   </main>
 </template>
 

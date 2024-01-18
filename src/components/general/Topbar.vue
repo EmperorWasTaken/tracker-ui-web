@@ -1,3 +1,31 @@
+<template>
+    <div class="layout-topbar">
+        <router-link to="/" class="layout-topbar-logo">
+            <!-- <img :src="logoUrl" alt="logo" /> -->
+            <span>TRACKER</span>
+        </router-link>
+
+        <button class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle()">
+            <i class="pi pi-bars"></i>
+        </button>
+
+        <button class="p-link layout-topbar-menu-button layout-topbar-button" @click="onTopBarMenuButton()">
+            <i class="pi pi-ellipsis-v"></i>
+        </button>
+
+        <div class="layout-topbar-menu" :class="topbarMenuClasses">
+            <button @click="onSettingsClick()" class="p-link layout-topbar-button">
+                <i class="pi pi-cog"></i>
+                <span>Settings</span>
+            </button>
+            <button @click="onProfileClick()" class="p-link layout-topbar-button">
+                <i class="pi pi-user"></i>
+                <span>Profile</span>
+            </button>
+        </div>
+    </div>
+</template>
+
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useLayout } from '../../layout/composables/layout.js';
@@ -64,33 +92,5 @@ const isOutsideClicked = (event) => {
     return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
 };
 </script>
-
-<template>
-    <div class="layout-topbar">
-        <router-link to="/" class="layout-topbar-logo">
-            <!-- <img :src="logoUrl" alt="logo" /> -->
-            <span>TRACKER</span>
-        </router-link>
-
-        <button class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle()">
-            <i class="pi pi-bars"></i>
-        </button>
-
-        <button class="p-link layout-topbar-menu-button layout-topbar-button" @click="onTopBarMenuButton()">
-            <i class="pi pi-ellipsis-v"></i>
-        </button>
-
-        <div class="layout-topbar-menu" :class="topbarMenuClasses">
-            <button @click="onSettingsClick()" class="p-link layout-topbar-button">
-                <i class="pi pi-cog"></i>
-                <span>Settings</span>
-            </button>
-            <button @click="onProfileClick()" class="p-link layout-topbar-button">
-                <i class="pi pi-user"></i>
-                <span>Profile</span>
-            </button>
-        </div>
-    </div>
-</template>
 
 <style lang="scss" scoped></style>
