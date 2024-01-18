@@ -1,3 +1,12 @@
+<template>
+    <ul class="layout-menu">
+        <template v-for="(item, i) in model" :key="item">
+            <SidebarItem v-if="!item.separator" :item="item" :index="i"></SidebarItem>
+            <li v-if="item.separator" class="menu-separator"></li>
+        </template>
+    </ul>
+</template>
+
 <script setup>
 import { ref } from 'vue';
 
@@ -11,7 +20,7 @@ const model = ref([
     {
         label: 'General',
         items: [
-            { label: 'Gym', icon: 'pi pi-fw pi-dumbbell', to: '/gym' },
+            { label: 'Gym', icon: 'pi pi-fw pi-heart', to: '/gym' },
 
         ]
     },
@@ -19,19 +28,10 @@ const model = ref([
         label: 'Nutrition',
         items: [
             { label: 'Tracker', icon: 'pi pi-fw pi-calendar', to: '/tracker' },
-            { label: 'Recipes', icon: 'pi pi-fw pi-utensils', to: '/recipes' }
+            { label: 'Recipes', icon: 'pi pi-fw pi-book', to: '/recipes' }
         ]
     }
 ]);
 </script>
-
-<template>
-    <ul class="layout-menu">
-        <template v-for="(item, i) in model" :key="item">
-            <SidebarItem v-if="!item.separator" :item="item" :index="i"></SidebarItem>
-            <li v-if="item.separator" class="menu-separator"></li>
-        </template>
-    </ul>
-</template>
 
 <style lang="scss" scoped></style>
