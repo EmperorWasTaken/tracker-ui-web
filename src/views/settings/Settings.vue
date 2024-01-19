@@ -35,7 +35,7 @@ const toggleDark = () => {
 const switchTheme = (theme) => {
   const themeLink = document.getElementById('theme-link');
   if (themeLink) {
-    const newThemeUrl = `/themes/${theme}/theme.css`;
+    const newThemeUrl = `/public/themes/${theme}/theme.css`;
     themeLink.setAttribute('href', newThemeUrl);
   }
 };
