@@ -7,6 +7,7 @@
         <Login />
     </div>
     <Toast />
+    <DynamicDialog />
 </template>
 
 <script setup>
