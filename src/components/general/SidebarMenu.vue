@@ -28,7 +28,9 @@ const model = ref([
         label: 'Nutrition',
         items: [
             { label: 'Tracker', icon: 'pi pi-fw pi-calendar', to: '/tracker' },
-            { label: 'Recipes', icon: 'pi pi-fw pi-book', to: '/recipes' }
+            { label: 'Recipes', icon: 'pi pi-fw pi-book', to: '/recipes' },
+            { label: 'Test Recipe', icon: 'pi pi-fw pi-book', to: 'recipes/recipe' }
+
         ]
     }
 ]);

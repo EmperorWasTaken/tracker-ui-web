@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Dashboard from '../views/general/Dashboard.vue';
+import Recipe from '../components/recipes/Recipe.vue';
 import Layout from '../components/general/Layout.vue';
 
 const router = createRouter({
@@ -29,7 +30,14 @@ const router = createRouter({
                 {
                     path: '/recipes',
                     name: 'recipes',
-                    component: () => import('../views/recipes/Recipes.vue')
+                    component: () => import('../views/recipes/Recipes.vue'),
+                    children: [
+                        {
+                          path: 'recipe/:id',
+                          name: 'Recipe',
+                          component: Recipe
+                        }
+                    ]
                 },
                 {
                     path: '/settings',
