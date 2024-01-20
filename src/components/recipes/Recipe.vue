@@ -54,9 +54,12 @@
 
         <!-- Nutritional Information -->
         <Card>
-            <template #title>Ingredients</template>
+            <template #title>Nutrition</template>
             <template #content>
-                <p>Calories: {{ recipe.nutrition.calories }}</p>
+                <p>Calories: {{ recipe?.nutrition?.calories }}</p>
+                <p>Fat: {{ recipe?.nutrition?.fat }}</p>
+                <p>Carbs: {{ recipe?.nutrition?.carbs }}</p>
+                <p>Protein: {{ recipe?.nutrition?.protein }}</p>
             <!-- Add more nutritional info here -->
             </template>
         
@@ -103,8 +106,13 @@ function fetchRecipeById(id) {
         cookTime: '20 mins',
         servings: 4,
         ingredients: ['Ingredient 1', 'Ingredient 2', 'Ingredient 3'],
-        instructions: ['Instruction 1', 'Instruction 2', 'Instruction 3']
-        
+        instructions: ['Instruction 1', 'Instruction 2', 'Instruction 3'],
+        nutrition: {
+            calories: 100,
+            fat: 10,
+            carbs: 20,
+            protein: 30
+        }
         // ...other recipe fields
     };
 }

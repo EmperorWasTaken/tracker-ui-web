@@ -1,5 +1,5 @@
 <template>
-    <Card>
+    <Card style="margin: 10px;">
         <template #content>
             <img :src="recipe.imageUrl" alt="Recipe Image" />
             <h2>{{ recipe.title }}</h2>
