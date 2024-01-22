@@ -2,7 +2,7 @@
     <div class="recipes-list">
         <Toolbar>
             <template #start>
-                <Button>
+                <Button @click="addRecipe">
                     <i class="pi pi-plus"></i>
                     Add recipe
                 </Button>
@@ -24,59 +24,77 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+import { get, post } from '../../helpers/api.js';
+import { useUserStore } from '../../stores/user.js';
 import RecipesCard from '../../components/recipes/RecipesCard.vue';
+import Recipe from '../../components/recipes/Recipe.vue';
 import Toolbar from 'primevue/toolbar';
 import Button from 'primevue/button';
 import MultiSelect from 'primevue/multiselect';
 import InputText from 'primevue/inputtext';
+import { useDialog } from 'primevue/usedialog';
+
+const userStore = useUserStore();
+const dialog = useDialog();
 
 const selectedTypes = ref([]);
 const searchQuery = ref('');
+const recipes = ref([]);
+const options = ref([]);
 
+const userId = userStore.userId;
 
-const recipes = ref([
-    {
-        id: 1,
-        title: 'Delicious Pasta',
-        author: 'Chef John Doe',
-        imageUrl: 'path-to-pasta-image.jpg',
-        description: 'A delightful pasta dish with rich flavors...',
-        prepTime: '20 mins',
-        cookTime: '30 mins',
-        servings: 4,
-        type: 'Pasta'
-    },
-    {
-        id: 2,
-        title: 'Hearty Vegetable Soup',
-        author: 'Chef Jane Smith',
-        imageUrl: 'path-to-soup-image.jpg',
-        description: 'A healthy and warming vegetable soup, perfect for cold days...',
-        prepTime: '15 mins',
-        cookTime: '40 mins',
-        servings: 6,
-        type: 'Soup'
+onMounted(async () => {
+    try {
+        const response = await get('feature', 'recipe', null, { userId: userId });
+        recipes.value = response.data;
+        updateFilterOptions();
+    } catch (error) {
+        console.error('Error fetching recipes:', error);
     }
-    // Add more recipes as needed
-]);
+});
 
-const options = ref([
-    { name: 'Pasta', code: 'P' },
-    { name: 'Soup', code: 'S' },
-    { name: 'Salad', code: 'S' },
-    { name: 'Dessert', code: 'D' },
-    { name: 'Beverage', code: 'B' }
-]);
+const updateFilterOptions = () => {
+    const tagSet = new Set();
+    recipes.value.forEach(recipe => {
+        recipe.tags.forEach(tag => {
+            tagSet.add(tag.type);
+        });
+    });
+    options.value = Array.from(tagSet).map(tag => ({ name: tag, code: tag }));
+};
 
 const filteredRecipes = computed(() => {
     return recipes.value.filter(recipe => {
         const selectedTypeNames = selectedTypes.value.map(type => type.name);
-        const matchesType = selectedTypeNames.length === 0 || selectedTypeNames.includes(recipe.type);
-        const matchesSearch = recipe.title.toLowerCase().includes(searchQuery.value.toLowerCase());
+        const matchesType = selectedTypeNames.length === 0 || selectedTypeNames.some(typeName => recipe.tags.some(tag => tag.type === typeName));
+        const matchesSearch = recipe.name.toLowerCase().includes(searchQuery.value.toLowerCase());
         return matchesType && matchesSearch;
     });
 });
+
+const addRecipe = () => {
+    dialog.open(Recipe, {
+        data: {
+        },
+        props: {
+            header: 'Add New Recipe',
+            style: { width: '50vw' },
+            isNew: true,
+            isEditable: true
+        },
+        onClose: (options) => {
+            const data = options.data;
+            if (data) {
+                const buttonType = data.buttonType;
+                const summary_and_detail = buttonType ? { summary: 'No Product Selected', detail: `Pressed '${buttonType}' button` } : { summary: 'Product Selected', detail: data.name };
+
+                toast.add({ severity: 'info', ...summary_and_detail, life: 3000 });
+            }
+        }
+    });
+};
 </script>
 
 <style></style>
