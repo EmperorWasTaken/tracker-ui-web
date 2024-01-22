@@ -17,8 +17,8 @@ import { useDark } from '@vueuse/core';
 
 const isDark = useDark();
 
-const lightTheme = 'lara-light-teal';
-const darkTheme = 'lara-dark-teal';
+const lightTheme = 'light-theme';
+const darkTheme = 'dark-theme';
 
 const storedTheme = localStorage.getItem('theme') || lightTheme;
 isDark.value = storedTheme === darkTheme;
@@ -35,7 +35,7 @@ const toggleDark = () => {
 const switchTheme = (theme) => {
   const themeLink = document.getElementById('theme-link');
   if (themeLink) {
-    const newThemeUrl = `./themes/${theme}/theme.css`;
+    const newThemeUrl = `./themes/styles/${theme}.css`;
     themeLink.setAttribute('href', newThemeUrl);
   }
 };
