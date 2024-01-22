@@ -40,11 +40,11 @@ const onChangeTheme = (theme) => {
 const switchTheme = (theme) => {
   const themeLink = document.getElementById('theme-link');
   if (themeLink) {
-    const newThemeUrl = `/themes/${theme}/theme.css`;
+    const newThemeUrl = `/themes/styles/${theme}.css`;
     themeLink.setAttribute('href', newThemeUrl);
   }
 };
-const storedTheme = localStorage.getItem('theme')  ||"";
+const storedTheme = localStorage.getItem('theme')  ||"light-theme";
 
 onMounted(async () => {
     switchTheme(storedTheme);
