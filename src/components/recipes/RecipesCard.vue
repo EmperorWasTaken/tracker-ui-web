@@ -2,7 +2,7 @@
     <Card style="margin: 10px;">
         <template #content>
             <img :src="recipe.imageUrl" alt="Recipe Image" />
-            <h2>{{ recipe.title }}</h2>
+            <h2>{{ recipe.name }}</h2>
             <p>{{ recipe.description }}</p>
             <Button label="View Recipe" @click="goToRecipe(recipe.id)" class="p-button-info"></Button>
         </template>
