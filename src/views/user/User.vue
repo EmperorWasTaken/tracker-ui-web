@@ -18,8 +18,6 @@
             <p>Weight: {{user ? user.user_metadata.weight : "" }}</p>
         </div>
         <div v-if="user">
-            <p>A tiny violin</p>
-            <button @click="logUser">Log user</button>
             <InputText type="text" v-model="name" placeholder="Name"></InputText>
             <InputText type="text" v-model="age" placeholder="Age"></InputText>
             <InputText type="text" v-model="height" placeholder="Height"></InputText>
@@ -53,28 +51,15 @@ const weight = ref('');
 const bf = ref('');
 
 onMounted(() => {
-
   user.value = supabase.auth.user();
-
 
   const { data } = supabase.auth.onAuthStateChange((event, session) => {
     user.value = session?.user ?? null;
   });
 });
 
-const logUser = () => {
-    console.log(user)
-}
-
-const userMetadata = {
-    name: name.value,
-    age: age.value,
-    height: height.value,
-    weight: weight.value
-}
 
 const updateUserData = async () => {
-  // Input validation logic (validate age, height, weight)
 
   const userMetadata = {
     name: name.value,
@@ -84,11 +69,9 @@ const updateUserData = async () => {
   };
 
   await supabase.auth.update({
-    data: userMetadata, // Use 'data' instead of 'user_metadata'
+    data: userMetadata,
     options: { refresh: true },
   });
-
-  console.log("updated user data");
 };
 
 

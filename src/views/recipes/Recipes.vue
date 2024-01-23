@@ -76,8 +76,7 @@ const addRecipe = () => {
         data: {
         },
         props: {
-            header: 'Add New Recipe',
-            style: { width: '50vw' },
+            style: { width: '60vw' },
             isNew: true,
             isEditable: true
         },

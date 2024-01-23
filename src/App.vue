@@ -46,20 +46,21 @@ const switchTheme = (theme) => {
     themeLink.setAttribute('href', newThemeUrl);
   }
 };
-const storedTheme = localStorage.getItem('theme')  ||"light-theme";
 
 onMounted(async () => {
-    switchTheme(storedTheme);
     const session = supabase.auth.session();
     user.value = session?.user || null;
+    const userTheme = user.value.user_metadata.theme;
+    console.log("userTheme", userTheme);
+    switchTheme(userTheme);
 
     if (!user.value) {
         router.push({ name: 'Login' });
     } else {
         userStore.setUserId(user.value.id);
+        userStore.setUserTheme(user.value.user_metadata.theme)
         fetchAllTrackedDay();
         await recipeStore.fetchAllRecipes(userStore.userId);
-        console.log(recipeStore.recipes);
         subscribeToTrackedDayChanges();
     }
 
@@ -72,7 +73,6 @@ onMounted(async () => {
         }
     });
 
-    console.log('user', user.value);
 });
 
 const fetchAllTrackedDay = async () => {
