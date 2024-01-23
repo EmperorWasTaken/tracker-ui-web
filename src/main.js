@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import App from './App.vue';
 import router from './router';
+import { setupValidationRules } from '../src/helpers/validator.js';
 import "./assets/main.css";
 import "./assets/base.css";
 
@@ -118,6 +119,8 @@ app.config.errorHandler = (err, vm, info) => {
 app.config.warnHandler = (msg, vm, trace) => {
     console.warn(msg, vm, trace);
 }
+
+setupValidationRules();
 
 app.config.performance = true;
 
