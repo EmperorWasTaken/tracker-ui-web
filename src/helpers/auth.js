@@ -1,16 +1,23 @@
-// src/services/auth.js
 import { supabase } from "../supabase/init.js";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
 
-export const register = async (email, password, confirmPassword) => {
+export const register = async (email, password, confirmPassword, firstName, lastName, age, ) => {
   console.log("Registering user in auth.js");
     if (password === confirmPassword) {
         try {
             const { error } = await supabase.auth.signUp({
                 email,
                 password,
+                options: {
+                    data: {
+                        first_name: firstName,
+                        last_name: lastName,
+                        age: age,
+                        first_time_signup: true,
+                    }
+                }
             });
             if (error) throw error;
         } catch (error) {

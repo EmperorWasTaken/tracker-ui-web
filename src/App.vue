@@ -15,6 +15,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import { supabase } from './supabase/init.js';
 import { useUserStore } from './stores/user.js';
 import { useTrackerStore } from './stores/tracker.js';
+import { useRecipeStore } from './stores/recipes.js';
 import { get, post } from './helpers/api.js';
 import Login from './views/user/Login.vue';
 import { useLayout } from './layout/composables/layout';
@@ -23,6 +24,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const userStore = useUserStore();
 const trackerStore = useTrackerStore();
+const recipeStore = useRecipeStore();
 const user = ref(null);
 
 
@@ -44,18 +46,21 @@ const switchTheme = (theme) => {
     themeLink.setAttribute('href', newThemeUrl);
   }
 };
-const storedTheme = localStorage.getItem('theme')  ||"light-theme";
 
 onMounted(async () => {
-    switchTheme(storedTheme);
     const session = supabase.auth.session();
     user.value = session?.user || null;
+    const userTheme = user.value.user_metadata.theme;
+    console.log("userTheme", userTheme);
+    switchTheme(userTheme);
 
     if (!user.value) {
         router.push({ name: 'Login' });
     } else {
         userStore.setUserId(user.value.id);
+        userStore.setUserTheme(user.value.user_metadata.theme)
         fetchAllTrackedDay();
+        await recipeStore.fetchAllRecipes(userStore.userId);
         subscribeToTrackedDayChanges();
     }
 
@@ -68,7 +73,6 @@ onMounted(async () => {
         }
     });
 
-    console.log('user', user.value);
 });
 
 const fetchAllTrackedDay = async () => {

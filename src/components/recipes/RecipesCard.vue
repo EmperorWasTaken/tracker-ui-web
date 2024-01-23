@@ -3,7 +3,8 @@
         <template #content>
             <img :src="recipe.imageUrl" alt="Recipe Image" />
             <h2>{{ recipe.name }}</h2>
-            <p>{{ recipe.description }}</p>
+            <h5>{{ recipe.description }}</h5>
+            <p>{{ recipe.author }}</p>
             <Button label="View Recipe" @click="goToRecipe(recipe.id)" class="p-button-info"></Button>
         </template>
     </Card>

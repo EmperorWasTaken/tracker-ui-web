@@ -74,37 +74,63 @@
     <div v-else>
         <h1>{{ isNew ? 'Add New Recipe' : 'Edit Recipe' }}</h1>
         <form @submit.prevent="saveRecipe">
-            <InputText v-model="recipe.name" placeholder="Recipe Name" />
-            <InputText v-model="recipe.author" placeholder="Author" />
-            <InputText v-model="recipe.prepTime" placeholder="Preparation Time" />
-            <InputText v-model="recipe.cookTime" placeholder="Cooking Time" />
-            <InputText v-model="recipe.servings" placeholder="Servings" />
-            <Textarea v-model="recipe.description" placeholder="Description" />
+            <Card>
+                <template #content>
+                    <InputText v-model="newRecipe.name" placeholder="Recipe Name" />
+                    <InputText v-model="newRecipe.author" placeholder="Author" />
+                    <InputText v-model="newRecipe.prepTime" placeholder="Preparation Time" />
+                    <InputText v-model="newRecipe.cookTime" placeholder="Cooking Time" />
+                    <InputText v-model="newRecipe.servings" placeholder="Servings" />
+                    <Textarea v-model="newRecipe.description" placeholder="Description"></Textarea>
+                </template>
+            </Card>
             <!-- Handling Ingredients -->
-            <div v-for="(ingredient, index) in newRecipe.ingredients" :key="index">
-                <InputText v-model="ingredient.name" placeholder="Ingredient Name" />
-                <InputText v-model="ingredient.amount" placeholder="Amount" />
-                <InputText v-model="ingredient.unit" placeholder="Unit" />
-                <!-- Add more fields for each ingredient property -->
-                <Button icon="pi pi-minus" @click="removeIngredient(index)"></Button>
-            </div>
-            <Button @click="addIngredient" icon="pi pi-plus">Add Ingredient</Button>
+            <Card>
+                <template #content>
+                    <div v-for="(ingredient, index) in newRecipe.ingredients" :key="index">
+                        <InputText v-model="ingredient.name" placeholder="Ingredient Name" />
+                        <InputText v-model="ingredient.amount" placeholder="Amount" />
+                        <InputText v-model="ingredient.unit" placeholder="Unit" />
+                        <!-- Add more fields for each ingredient property -->
+                        <Button icon="pi pi-minus" @click="removeIngredient(index)"></Button>
+                    </div>
+                    <Button @click="addIngredient">Add Ingredient</Button>
+                </template>
+            </Card>
 
             <!-- Handling Cooking Steps -->
             <!-- Similar structure as ingredients -->
-            <div v-for="(step, index) in newRecipe.steps" :key="index">
-                <InputText v-model="step.description" placeholder="Step Description" />
-                <Button icon="pi pi-minus" @click="removeStep(index)"></Button>
-            </div>
-            <Button @click="addStep" icon="pi pi-plus">Add Step</Button>
+            <Card>
+                <template #content>
+                    <div v-for="(step, index) in newRecipe.steps" :key="index">
+                        <InputText v-model="step.description" placeholder="Step Description" />
+                        <Button icon="pi pi-minus" @click="removeStep(index)"></Button>
+                    </div>
+                    <Button @click="addStep">Add Step</Button>
+                </template>
+            </Card>
             <!-- Nutritional Information -->
             <!-- Fields for calories, fat, carbs, protein, etc. -->
-            <InputText v-model="recipe.nutrition.calories" placeholder="Calories" />
-            <InputText v-model="recipe.nutrition.fat" placeholder="Fat" />
-            <InputText v-model="recipe.nutrition.carbs" placeholder="Carbs" />
-            <InputText v-model="recipe.nutrition.protein" placeholder="Protein" />
+            <Card>
+                <template #content>
+                    <InputText v-model="newRecipe.nutrition.calories" placeholder="Calories" />
+                    <InputText v-model="newRecipe.nutrition.fat" placeholder="Fat" />
+                    <InputText v-model="newRecipe.nutrition.carbs" placeholder="Carbs" />
+                    <InputText v-model="newRecipe.nutrition.protein" placeholder="Protein" />
+                </template>
+            </Card>
 
-            <Button label="Save Recipe" type="submit" class="p-button-success" />
+            <Card>
+                <template #content>
+                    <FileUpload name="recipeImg" url="/api/upload" @upload="onAdvancedUpload($event)" :multiple="true" accept="image/*" :maxFileSize="1000000">
+                        <template #empty>
+                            <p>Drag and drop files to here to upload.</p>
+                        </template>
+                    </FileUpload>
+                </template>
+            </Card>
+
+            <Button label="Save Recipe" type="submit" class="p-button-success"></Button>
         </form>
     </div>
 </template>
@@ -115,6 +141,7 @@ import { get, post } from '../../helpers/api.js';
 import { useUserStore } from '../../stores/user.js';
 import { useField, useForm } from 'vee-validate';
 import Button from 'primevue/button';
+import FileUpload from 'primevue/fileupload';
 import Card from 'primevue/card';
 import Badge from 'primevue/badge';
 import Textarea from 'primevue/textarea';
@@ -129,6 +156,13 @@ const recipe = ref({
     description: '',
     ingredients: [],
     steps: [],
+    tags: [],
+    nutrition: {
+        calories: '',
+        fat: '',
+        carbs: '',
+        protein: ''
+    }
 });
 
 const newRecipe = ref({
@@ -140,6 +174,13 @@ const newRecipe = ref({
     description: '',
     ingredients: [],
     steps: [],
+    tags: [],
+    nutrition: {
+        calories: '',
+        fat: '',
+        carbs: '',
+        protein: ''
+    }
 });
 
 const userStore = useUserStore();
@@ -202,8 +243,16 @@ const saveRecipe = async () => {
             })),
             tags: newRecipe.value.tags.map((tag) => ({
                 type: tag.type
-            }))
+            })),
+            nutrition: {
+                calories: newRecipe.value.nutrition.calories || 0,
+                fat: newRecipe.value.nutrition.fat || 0,
+                carbs: newRecipe.value.nutrition.carbs || 0,
+                protein: newRecipe.value.nutrition.protein || 0
+            }
         };
+
+        
 
         const response = await post('feature', 'recipe', payload, { userId: userId });
         console.log('Recipe saved', response.data);
