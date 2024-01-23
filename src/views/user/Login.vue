@@ -151,7 +151,6 @@ const handleLogin = async () => {
 };
 
 const handleRegister = async () => {
-    debugger;
     if (registerPassword.value === confirmPassword.value) {
         try {
             age.value = parseInt(age.value);
