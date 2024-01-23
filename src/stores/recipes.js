@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { get } from '../helpers/api.js';
 
 export const useRecipeStore = defineStore('recipes', {
     state: () => ({

@@ -74,12 +74,12 @@
     <div v-else>
         <h1>{{ isNew ? 'Add New Recipe' : 'Edit Recipe' }}</h1>
         <form @submit.prevent="saveRecipe">
-            <InputText v-model="recipe.name" placeholder="Recipe Name" />
-            <InputText v-model="recipe.author" placeholder="Author" />
-            <InputText v-model="recipe.prepTime" placeholder="Preparation Time" />
-            <InputText v-model="recipe.cookTime" placeholder="Cooking Time" />
-            <InputText v-model="recipe.servings" placeholder="Servings" />
-            <Textarea v-model="recipe.description" placeholder="Description" />
+            <InputText v-model="newRecipe.name" placeholder="Recipe Name" />
+            <InputText v-model="newRecipe.author" placeholder="Author" />
+            <InputText v-model="newRecipe.prepTime" placeholder="Preparation Time" />
+            <InputText v-model="newRecipe.cookTime" placeholder="Cooking Time" />
+            <InputText v-model="newRecipe.servings" placeholder="Servings" />
+            <Textarea v-model="newRecipe.description" placeholder="Description" ></Textarea>
             <!-- Handling Ingredients -->
             <div v-for="(ingredient, index) in newRecipe.ingredients" :key="index">
                 <InputText v-model="ingredient.name" placeholder="Ingredient Name" />
@@ -99,12 +99,12 @@
             <Button @click="addStep" icon="pi pi-plus">Add Step</Button>
             <!-- Nutritional Information -->
             <!-- Fields for calories, fat, carbs, protein, etc. -->
-            <InputText v-model="recipe.nutrition.calories" placeholder="Calories" />
-            <InputText v-model="recipe.nutrition.fat" placeholder="Fat" />
-            <InputText v-model="recipe.nutrition.carbs" placeholder="Carbs" />
-            <InputText v-model="recipe.nutrition.protein" placeholder="Protein" />
+            <InputText v-model="newRecipe.nutrition.calories" placeholder="Calories" />
+            <InputText v-model="newRecipe.nutrition.fat" placeholder="Fat" />
+            <InputText v-model="newRecipe.nutrition.carbs" placeholder="Carbs" />
+            <InputText v-model="newRecipe.nutrition.protein" placeholder="Protein" />
 
-            <Button label="Save Recipe" type="submit" class="p-button-success" />
+            <Button label="Save Recipe" type="submit" class="p-button-success" ></Button>
         </form>
     </div>
 </template>
@@ -129,6 +129,13 @@ const recipe = ref({
     description: '',
     ingredients: [],
     steps: [],
+    tags: [],  
+    nutrition: {
+        calories: '',
+        fat: '',
+        carbs: '',
+        protein: ''
+    }
 });
 
 const newRecipe = ref({
@@ -140,6 +147,13 @@ const newRecipe = ref({
     description: '',
     ingredients: [],
     steps: [],
+    tags: [],  
+    nutrition: {
+        calories: '',
+        fat: '',
+        carbs: '',
+        protein: ''
+    }
 });
 
 const userStore = useUserStore();
@@ -202,7 +216,13 @@ const saveRecipe = async () => {
             })),
             tags: newRecipe.value.tags.map((tag) => ({
                 type: tag.type
-            }))
+            })),
+            nutrition: {
+                calories: newRecipe.value.nutrition.calories || 0,
+                fat: newRecipe.value.nutrition.fat || 0,
+                carbs: newRecipe.value.nutrition.carbs || 0,
+                protein: newRecipe.value.nutrition.protein || 0
+            }
         };
 
         const response = await post('feature', 'recipe', payload, { userId: userId });

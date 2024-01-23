@@ -25,8 +25,8 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { get, post } from '../../helpers/api.js';
 import { useUserStore } from '../../stores/user.js';
+import { useRecipeStore } from '../../stores/recipes.js';
 import RecipesCard from '../../components/recipes/RecipesCard.vue';
 import Recipe from '../../components/recipes/Recipe.vue';
 import Toolbar from 'primevue/toolbar';
@@ -36,19 +36,17 @@ import InputText from 'primevue/inputtext';
 import { useDialog } from 'primevue/usedialog';
 
 const userStore = useUserStore();
+const recipeStore = useRecipeStore();
 const dialog = useDialog();
 
 const selectedTypes = ref([]);
 const searchQuery = ref('');
-const recipes = ref([]);
 const options = ref([]);
 
 const userId = userStore.userId;
 
 onMounted(async () => {
     try {
-        const response = await get('feature', 'recipe', null, { userId: userId });
-        recipes.value = response.data;
         updateFilterOptions();
     } catch (error) {
         console.error('Error fetching recipes:', error);
@@ -57,7 +55,7 @@ onMounted(async () => {
 
 const updateFilterOptions = () => {
     const tagSet = new Set();
-    recipes.value.forEach(recipe => {
+    recipeStore.recipes.forEach(recipe => {
         recipe.tags.forEach(tag => {
             tagSet.add(tag.type);
         });
@@ -66,9 +64,8 @@ const updateFilterOptions = () => {
 };
 
 const filteredRecipes = computed(() => {
-    return recipes.value.filter(recipe => {
-        const selectedTypeNames = selectedTypes.value.map(type => type.name);
-        const matchesType = selectedTypeNames.length === 0 || selectedTypeNames.some(typeName => recipe.tags.some(tag => tag.type === typeName));
+    return recipeStore.recipes.filter(recipe => {
+        const matchesType = selectedTypes.value.length === 0 || selectedTypes.value.some(typeName => recipe.tags.some(tag => tag.type === typeName));
         const matchesSearch = recipe.name.toLowerCase().includes(searchQuery.value.toLowerCase());
         return matchesType && matchesSearch;
     });
