@@ -108,7 +108,7 @@ const { value: password, errorMessage: passwordError } = useField('password', 'r
 
 const { value: registerEmail, errorMessage: registerEmailError } = useField('email', 'required|email');
 const { value: registerPassword, errorMessage: registerPasswordError } = useField('registerPassword', 'required|minLength:8');
-const { value: confirmPassword, errorMessage: confirmPasswordError } = useField('confirmPassword', 'required|minLength:8|confirmed:@password');
+const { value: confirmPassword, errorMessage: confirmPasswordError } = useField('confirmPassword', 'required|minLength:8');
 const { value: firstName, errorMessage: firstNameError } = useField('firstName', 'required');
 const { value: lastName, errorMessage: lastNameError } = useField('lastName', 'required');
 const { value: age, errorMessage: ageError } = useField('age', 'required|numeric');
@@ -151,7 +151,8 @@ const handleLogin = async () => {
 };
 
 const handleRegister = async () => {
-    if (password.value === confirmPassword.value) {
+    debugger;
+    if (registerPassword.value === confirmPassword.value) {
         try {
             age.value = parseInt(age.value);
             await register(isRegistering ? registerEmail.value : email.value, isRegistering ? registerPassword.value : password.value, confirmPassword.value, firstName.value, lastName.value, age.value);
@@ -171,6 +172,7 @@ const handleRegister = async () => {
         }
     } else {
         errorMsg.value = 'Passwords do not match';
+        showToast(errorMsg.message, 'error', 'Error registering!');
         setTimeout(() => {
             errorMsg.value = null;
         }, 5000);
