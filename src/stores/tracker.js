@@ -10,6 +10,7 @@ export const useTrackerStore = defineStore('tracker', {
       snacks: [],
     },
     totalCalories: 0,
+    selectedDayIndex: 0,
   }),
   getters: {
     caloriesLeft: (state) => (totalCalories) => {
@@ -17,6 +18,12 @@ export const useTrackerStore = defineStore('tracker', {
         return dailyCalorieGoal - totalCalories;
       },
     getTrackedDays: (state) => state.trackedDays,
+    selectedData: (state) => {
+      if(state.trackedDays.length > 0 && state.trackedDays.length > state.selectedDayIndex) {
+        return state.trackedDays[state.selectedDayIndex];
+      }
+      return undefined;
+    },
   },
   actions: {
     addFoodItem(meal, name, calories) {
@@ -24,6 +31,7 @@ export const useTrackerStore = defineStore('tracker', {
       this.totalCalories += calories;
     },
     setTrackedDays(data) {
+        console.log("Setting tracked days with data:", data);
         this.trackedDays = data;
     },
     setMeals(trackedDay) {
@@ -33,5 +41,10 @@ export const useTrackerStore = defineStore('tracker', {
       this.meals.snacks = trackedDay.snacks || [];
       // Add logic for totalCalories calculation if needed
     },
+    selectDay(index) {
+      if(index >= 0 && index < this.trackedDays.length) {
+        this.selectedDayIndex = index;
+      }
+    }
   },
 });

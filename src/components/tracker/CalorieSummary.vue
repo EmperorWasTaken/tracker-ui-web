@@ -22,6 +22,7 @@ const selectedData = computed(() => {
 const trackerStore = useTrackerStore();
 
 const totalCalories = computed(() => {
+  console.log("Selected Data Value:", selectedData.value); // Debugging selectedData
   let total = 0;
   if (selectedData.value) {
     ['breakfast', 'lunch', 'dinner', 'snacks'].forEach(mealType => {

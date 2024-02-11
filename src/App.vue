@@ -27,8 +27,6 @@ const trackerStore = useTrackerStore();
 const recipeStore = useRecipeStore();
 const user = ref(null);
 
-
-
 const { changeThemeSettings } = useLayout();
 
 const onChangeTheme = (theme) => {
@@ -50,17 +48,21 @@ const switchTheme = (theme) => {
 onMounted(async () => {
     const session = supabase.auth.session();
     user.value = session?.user || null;
-    const userTheme = user.value.user_metadata.theme;
-    console.log("userTheme", userTheme);
+    const userTheme = user?.value?.user_metadata?.theme;
+
+    console.log(session)
+
     switchTheme(userTheme);
 
     if (!user.value) {
+        switchTheme('light-theme');
         router.push({ name: 'Login' });
     } else {
         userStore.setUserId(user.value.id);
         userStore.setUserTheme(user.value.user_metadata.theme)
         fetchAllTrackedDay();
         await recipeStore.fetchAllRecipes(userStore.userId);
+        console.log("Tracked days after fetching:", trackerStore.trackedDays);
         subscribeToTrackedDayChanges();
     }
 

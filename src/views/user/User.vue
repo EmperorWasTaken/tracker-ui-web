@@ -13,6 +13,8 @@
 		</div>
         <div v-if="user">
             <p>Name: {{user ? user.user_metadata.name : "" }}</p>
+            <p>First Name: {{user ? user.user_metadata.first_name : "" }}</p>
+            <p>Last Name: {{user ? user.user_metadata.last_name : "" }}</p>
             <p>Age: {{user ? user.user_metadata.age : "" }}</p>
             <p>Height: {{user ? user.user_metadata.height : "" }}</p>
             <p>Weight: {{user ? user.user_metadata.weight : "" }}</p>
@@ -52,6 +54,8 @@ const bf = ref('');
 
 onMounted(() => {
   user.value = supabase.auth.user();
+
+  console.log(user.value.user_metadata)
 
   const { data } = supabase.auth.onAuthStateChange((event, session) => {
     user.value = session?.user ?? null;

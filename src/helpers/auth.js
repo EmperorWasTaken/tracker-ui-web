@@ -7,18 +7,23 @@ export const register = async (email, password, confirmPassword, firstName, last
   console.log("Registering user in auth.js");
     if (password === confirmPassword) {
         try {
-            const { error } = await supabase.auth.signUp({
+
+            const userMetadata = {
+                first_name: firstName,
+                last_name: lastName,
+                age: age,
+                first_time_signup: true,
+                theme: "light-theme"
+            };
+
+            console.log("Registering user in auth.js with metadata: ", userMetadata);
+
+            const { user, error } = await supabase.auth.signUp({
                 email,
                 password,
-                options: {
-                    data: {
-                        first_name: firstName,
-                        last_name: lastName,
-                        age: age,
-                        first_time_signup: true,
-                    }
-                }
+                options: { data: userMetadata }
             });
+            console.log("Supabase response", user, error);
             if (error) throw error;
         } catch (error) {
             console.error("Error registering user", error);
@@ -48,3 +53,13 @@ export const logout = async () => {
         throw error;
     }
 };
+
+export const updateMetadata = async (metadata) => {
+    try {
+        const { error } = await supabase.auth.update({ data: metadata, options: { refresh: true } });
+        if (error) throw error;
+    } catch (error) {
+        console.error("Error updating metadata", error);
+        throw error;
+    }
+}
